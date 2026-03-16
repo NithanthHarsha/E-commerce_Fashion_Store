@@ -43,32 +43,35 @@ def login_user(request):
 @api_view(['GET', 'POST'])
 def product_list(request):
     if request.method == 'GET':
-        products = Product.objects.all()
+        products = Product.objects.all().order_by('-id')
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
     elif request.method == 'POST':
         serializer = ProductSerializer(data=request.data)
-        if serializer.valid():
+        if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
 def product_detail(request, pk):
     try:
         product = Product.objects.get(pk=pk)
     except Product.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response({"error": "Product not found"}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
         serializer = ProductSerializer(product)
         return Response(serializer.data)
-    elif request.method == 'PUT':
-        serializer = ProductSerializer(product, data=request.data)
+    
+    elif request.method in ['PUT', 'PATCH']:
+        # For PUT/PATCH with FormData, DRF handles files in request.data
+        serializer = ProductSerializer(product, data=request.data, partial=(request.method == 'PATCH'))
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
     elif request.method == 'DELETE':
         product.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

@@ -84,7 +84,7 @@ const Home = () => {
                     </video>
                 </div>
                 <div className="hero-content">
-                    <span>Spring / Summer 2025</span>
+                    <span>Spring / Summer 2026</span>
                     <h1>The Art of Elegance</h1>
                     <a href="#collection" className="hero-btn">Explore Collection</a>
                 </div>
@@ -101,7 +101,10 @@ const Home = () => {
                         return (
                             <div key={product.id} className="product-card">
                                 <div className="product-image-wrapper">
-                                    <img src={product.image} alt={product.name} />
+                                    <img 
+                                        src={product.image.startsWith('http') ? product.image : `http://127.0.0.1:8000${product.image}`} 
+                                        alt={product.name} 
+                                    />
                                     <button
                                         className="quick-add"
                                         onClick={() => handleQuickAdd(product)}

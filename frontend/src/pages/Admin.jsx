@@ -150,7 +150,13 @@ const Admin = () => {
                         <tbody>
                             {products.map(product => (
                                 <tr key={product.id}>
-                                    <td><img src={product.image} alt={product.name} className="admin-thumb" /></td>
+                                    <td>
+                                        <img 
+                                            src={product.image.startsWith('http') ? product.image : `http://127.0.0.1:8000${product.image}`} 
+                                            alt={product.name} 
+                                            className="admin-thumb" 
+                                        />
+                                    </td>
                                     <td>{product.name}</td>
                                     <td>${product.price}</td>
                                     <td>
