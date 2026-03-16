@@ -70,7 +70,16 @@ const Home = () => {
         <div className="home-container">
             <header className="hero-section">
                 <div className="hero-image-container">
-                    <img src="/hero.png" alt="Luxury Fashion Exhibition" />
+                    <video 
+                        className="hero-video" 
+                        autoPlay 
+                        muted 
+                        loop 
+                        playsInline
+                    >
+                        <source src="https://player.vimeo.com/external/517614057.hd.mp4?s=b6540d51351c33f721d3e8e19c368d5e1b20c929&profile_id=172&oauth2_token_id=57447761" type="video/mp4" />
+                        Your browser does not support the video tag.
+                    </video>
                 </div>
                 <div className="hero-content">
                     <span>Spring / Summer 2025</span>
