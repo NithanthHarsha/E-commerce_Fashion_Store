@@ -76,6 +76,8 @@ const Home = () => {
                         muted
                         loop
                         playsInline
+                        disablePictureInPicture
+                        disableRemotePlayback
                     >
                         <source src="/fashion.mp4" type="video/mp4" />
                         Your browser does not support the video tag.

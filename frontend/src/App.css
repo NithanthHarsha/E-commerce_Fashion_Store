@@ -132,6 +132,7 @@ h1, h2, h3, .logo {
 
 .hero-video {
   display: block;
+  pointer-events: none; /* Prevents browser video controls/enhancements from appearing */
 }
 
 .hero-content {
