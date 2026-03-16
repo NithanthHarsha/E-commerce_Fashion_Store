@@ -15,7 +15,7 @@ const Home = () => {
             try {
                 const response = await fetchProducts();
                 setProducts(response.data);
-                
+
                 // Initialize default sizes (first size available)
                 const defaults = {};
                 response.data.forEach(p => {
@@ -23,7 +23,7 @@ const Home = () => {
                     defaults[p.id] = sizeList[0];
                 });
                 setSelectedSizes(defaults);
-                
+
                 setLoading(false);
             } catch (err) {
                 console.error("Error fetching products:", err);
@@ -63,21 +63,21 @@ const Home = () => {
             <span>Curating Collection...</span>
         </div>
     );
-    
+
     if (error) return <div className="error">{error}</div>;
 
     return (
         <div className="home-container">
             <header className="hero-section">
                 <div className="hero-image-container">
-                    <video 
-                        className="hero-video" 
-                        autoPlay 
-                        muted 
-                        loop 
+                    <video
+                        className="hero-video"
+                        autoPlay
+                        muted
+                        loop
                         playsInline
                     >
-                        <source src="https://assets.mixkit.co/videos/42581/42581-720.mp4" type="video/mp4" />
+                        <source src="/fashion.mp4" type="video/mp4" />
                         Your browser does not support the video tag.
                     </video>
                 </div>
@@ -91,7 +91,7 @@ const Home = () => {
             <section id="collection" className="section-title">
                 <h2>New Arrivals</h2>
             </section>
-            
+
             <div className="product-grid">
                 {products.length > 0 ? (
                     products.map((product) => {
@@ -100,7 +100,7 @@ const Home = () => {
                             <div key={product.id} className="product-card">
                                 <div className="product-image-wrapper">
                                     <img src={product.image} alt={product.name} />
-                                    <button 
+                                    <button
                                         className="quick-add"
                                         onClick={() => handleQuickAdd(product)}
                                     >
@@ -110,11 +110,11 @@ const Home = () => {
                                 <div className="product-card-info">
                                     <h3>{product.name}</h3>
                                     <p className="price">${product.price}</p>
-                                    
+
                                     {/* Size Selection */}
                                     <div className="size-selector-home">
                                         {sizes.map(size => (
-                                            <button 
+                                            <button
                                                 key={size}
                                                 className={`size-btn ${selectedSizes[product.id] === size ? 'active' : ''}`}
                                                 onClick={() => handleSizeSelect(product.id, size)}
@@ -141,7 +141,7 @@ const Home = () => {
             }}>
                 <h2 style={{ fontSize: '2.5rem', marginBottom: '1.5rem', fontFamily: 'Playfair Display' }}>Craftsmanship First</h2>
                 <p style={{ maxWidth: '600px', margin: '0 auto', color: 'var(--text-muted)', lineHeight: '2' }}>
-                    Every piece in our collection is selected for its timeless design and exceptional quality. 
+                    Every piece in our collection is selected for its timeless design and exceptional quality.
                     We believe in slow fashion that lasts a lifetime.
                 </p>
             </section>
