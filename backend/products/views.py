@@ -172,3 +172,21 @@ def user_notifications(request, username):
     notifications = Notification.objects.filter(user=username).order_by('-created_at')
     serializer = NotificationSerializer(notifications, many=True)
     return Response(serializer.data)
+
+@api_view(['PATCH', 'DELETE'])
+def notification_detail(request, pk):
+    try:
+        notification = Notification.objects.get(pk=pk)
+    except Notification.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'PATCH':
+        serializer = NotificationSerializer(notification, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        notification.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

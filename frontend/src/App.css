@@ -308,21 +308,64 @@ h1, h2, h3, .logo {
   text-align: left;
 }
 
-.notif-dropdown h4 {
-  font-family: 'Playfair Display';
+.notif-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 1rem;
   border-bottom: 1px solid #eee;
   padding-bottom: 0.5rem;
 }
 
+.notif-header h4 {
+  font-family: 'Playfair Display';
+  margin-bottom: 0;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.clear-all-btn {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.clear-all-btn:hover {
+  color: black;
+  text-decoration: underline;
+}
+
+.notif-list {
+  max-height: 350px;
+  overflow-y: auto;
+}
+
 .notif-item {
   padding: 0.8rem 0;
   border-bottom: 1px solid #f9f9f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  transition: background-color 0.3s;
+}
+
+.notif-item.unread {
+  background-color: #fcfaf7;
+}
+
+.notif-content {
+  flex: 1;
+  padding-right: 0.5rem;
 }
 
 .notif-item p {
   font-size: 0.85rem;
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.2rem;
   line-height: 1.4;
 }
 
@@ -331,11 +374,26 @@ h1, h2, h3, .logo {
   font-size: 0.7rem;
 }
 
+.delete-notif-btn {
+  background: none;
+  border: none;
+  color: #ccc;
+  font-size: 1.2rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 0.2rem;
+  transition: color 0.3s;
+}
+
+.delete-notif-btn:hover {
+  color: #e74c3c;
+}
+
 .no-notif {
   font-size: 0.8rem;
   color: var(--text-muted);
   text-align: center;
-  padding: 1rem 0;
+  padding: 2rem 0;
 }
 
 /* Order Status Badges */

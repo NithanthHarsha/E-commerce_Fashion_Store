@@ -49,6 +49,39 @@ function App() {
     fetchNotifications(username);
   };
 
+  const unreadCount = notifications.filter(n => !n.is_read).length;
+
+  const markAllAsRead = async () => {
+    const unreadNotifications = notifications.filter(n => !n.is_read);
+    if (unreadNotifications.length === 0) return;
+
+    try {
+      await Promise.all(unreadNotifications.map(n => 
+        axios.patch(`http://127.0.0.1:8000/api/notifications/${n.id}/detail/`, { is_read: true })
+      ));
+      // Update local state
+      setNotifications(notifications.map(n => ({ ...n, is_read: true })));
+    } catch (err) {
+      console.error("Error marking notifications as read", err);
+    }
+  };
+
+  const deleteNotification = async (id) => {
+    try {
+      await axios.delete(`http://127.0.0.1:8000/api/notifications/${id}/detail/`);
+      setNotifications(notifications.filter(n => n.id !== id));
+    } catch (err) {
+      console.error("Error deleting notification", err);
+    }
+  };
+
+  const toggleNotifications = () => {
+    if (!showNotifications) {
+      markAllAsRead();
+    }
+    setShowNotifications(!showNotifications);
+  };
+
   return (
     <Router>
       <div className="App">
@@ -76,23 +109,49 @@ function App() {
                 <li className="notification-wrapper">
                   <button 
                     className="notif-btn"
-                    onClick={() => setShowNotifications(!showNotifications)}
+                    onClick={toggleNotifications}
                   >
-                    🔔 {notifications.length > 0 && <span className="notif-badge">{notifications.length}</span>}
+                    🔔 {unreadCount > 0 && <span className="notif-badge">{unreadCount}</span>}
                   </button>
                   {showNotifications && (
                     <div className="notif-dropdown">
-                      <h4>Notifications</h4>
-                      {notifications.length > 0 ? (
-                        notifications.map(n => (
-                          <div key={n.id} className="notif-item">
-                            <p>{n.message}</p>
-                            <small>{new Date(n.created_at).toLocaleString()}</small>
-                          </div>
-                        ))
-                      ) : (
-                        <p className="no-notif">No new updates</p>
-                      )}
+                      <div className="notif-header">
+                        <h4>Notifications</h4>
+                        {notifications.length > 0 && (
+                          <button 
+                            className="clear-all-btn"
+                            onClick={() => {
+                              notifications.forEach(n => deleteNotification(n.id));
+                            }}
+                          >
+                            Clear All
+                          </button>
+                        )}
+                      </div>
+                      <div className="notif-list">
+                        {notifications.length > 0 ? (
+                          notifications.map(n => (
+                            <div key={n.id} className={`notif-item ${!n.is_read ? 'unread' : ''}`}>
+                              <div className="notif-content">
+                                <p>{n.message}</p>
+                                <small>{new Date(n.created_at).toLocaleString()}</small>
+                              </div>
+                              <button 
+                                className="delete-notif-btn" 
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  deleteNotification(n.id);
+                                }}
+                                title="Delete notification"
+                              >
+                                &times;
+                              </button>
+                            </div>
+                          ))
+                        ) : (
+                          <p className="no-notif">No new updates</p>
+                        )}
+                      </div>
                     </div>
                   )}
                 </li>
