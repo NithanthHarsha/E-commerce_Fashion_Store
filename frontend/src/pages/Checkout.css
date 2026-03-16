@@ -1,0 +1,145 @@
+.checkout-page {
+    padding: 6rem 10%;
+    min-height: 100vh;
+    animation: fadeIn 1s ease;
+    display: flex;
+    justify-content: center;
+}
+
+.checkout-container {
+    width: 100%;
+    max-width: 800px;
+}
+
+.checkout-header {
+    text-align: center;
+    margin-bottom: 5rem;
+}
+
+.checkout-header h1 {
+    font-size: 3rem;
+    font-family: 'Playfair Display', serif;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+}
+
+.step-indicator {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+}
+
+.step-indicator span {
+    position: relative;
+}
+
+.step-indicator span.active {
+    color: black;
+    font-weight: 600;
+}
+
+/* Form Styling */
+.checkout-form {
+    background: var(--bg-stone);
+    padding: 4rem;
+    border: 1px solid var(--border);
+}
+
+.checkout-step h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    margin-bottom: 3rem;
+    letter-spacing: 0.05em;
+}
+
+.form-row {
+    margin-bottom: 2rem;
+}
+
+.form-row.split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.form-group label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+}
+
+.form-group input {
+    padding: 1rem;
+    border: 1px solid var(--border);
+    background: white;
+    font-family: 'Outfit', sans-serif;
+    outline: none;
+    transition: var(--transition-smooth);
+}
+
+.form-group input:focus {
+    border-color: black;
+}
+
+.btn-next, .btn-submit {
+    width: 100%;
+    padding: 1.2rem;
+    background: black;
+    color: white;
+    border: none;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    margin-top: 2rem;
+}
+
+.btn-next:hover, .btn-submit:hover {
+    background: #333;
+}
+
+.form-actions {
+    display: flex;
+    gap: 2rem;
+}
+
+.btn-back {
+    padding: 1.2rem;
+    background: white;
+    color: black;
+    border: 1px solid black;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    margin-top: 2rem;
+    flex: 1;
+}
+
+.btn-back:hover {
+    background: black;
+    color: white;
+}
+
+.btn-submit {
+    flex: 2;
+}
+
+@media (max-width: 600px) {
+    .checkout-form { padding: 2rem; }
+    .form-row.split { grid-template-columns: 1fr; }
+}
