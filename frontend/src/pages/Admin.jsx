@@ -25,11 +25,22 @@ const Admin = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        const data = new FormData();
+        data.append('name', formData.name);
+        data.append('price', formData.price);
+        data.append('description', formData.description);
+        
+        // Only append file if a new one was selected
+        if (formData.image instanceof File) {
+            data.append('image', formData.image);
+        }
+
         try {
             if (editingId) {
-                await updateProduct(editingId, formData);
+                await updateProduct(editingId, data);
             } else {
-                await createProduct(formData);
+                await createProduct(data);
             }
             setFormData({ name: '', price: '', description: '', image: '' });
             setEditingId(null);
@@ -45,7 +56,7 @@ const Admin = () => {
             name: product.name,
             price: product.price,
             description: product.description,
-            image: product.image
+            image: product.image // This will be a URL string
         });
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
@@ -69,7 +80,7 @@ const Admin = () => {
             </header>
 
             <section className="admin-form-section">
-                <form className="admin-form" onSubmit={handleSubmit}>
+                <form className="admin-form" onSubmit={handleSubmit} encType="multipart/form-data">
                     <h2>{editingId ? "Edit Product" : "Add New Product"}</h2>
                     <div className="form-group">
                         <input 
@@ -91,13 +102,16 @@ const Admin = () => {
                         />
                     </div>
                     <div className="form-group">
+                        <label className="file-label">Product Image:</label>
                         <input 
-                            type="text" 
-                            placeholder="Image URL" 
-                            value={formData.image}
-                            onChange={(e) => setFormData({...formData, image: e.target.value})}
-                            required
+                            type="file" 
+                            accept="image/*"
+                            onChange={(e) => setFormData({...formData, image: e.target.files[0]})}
+                            required={!editingId}
                         />
+                        {editingId && formData.image && typeof formData.image === 'string' && (
+                            <small className="existing-img-hint">Currently: {formData.image.split('/').pop()}</small>
+                        )}
                     </div>
                     <div className="form-group">
                         <textarea 

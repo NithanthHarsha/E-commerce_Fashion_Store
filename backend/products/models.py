@@ -4,7 +4,7 @@ class Product(models.Model):
     name = models.CharField(max_length=200)
     price = models.FloatField()
     description = models.TextField()
-    image = models.URLField()
+    image = models.ImageField(upload_to='products/')
     sizes = models.CharField(max_length=100, default="S,M,L,XL") # Available sizes
 
     def __str__(self):
@@ -14,7 +14,7 @@ class Cart(models.Model):
     product_name = models.CharField(max_length=200)
     price = models.FloatField()
     quantity = models.IntegerField(default=1)
-    image = models.URLField(null=True, blank=True)
+    image = models.ImageField(upload_to='cart/', null=True, blank=True)
     size = models.CharField(max_length=10, default="M") # Selected size
 
     def __str__(self):
@@ -45,7 +45,7 @@ class OrderItem(models.Model):
     quantity = models.IntegerField()
     price = models.FloatField()
     size = models.CharField(max_length=10)
-    image = models.URLField(null=True, blank=True)
+    image = models.ImageField(upload_to='orders/', null=True, blank=True)
 
 class Notification(models.Model):
     user = models.CharField(max_length=200)
