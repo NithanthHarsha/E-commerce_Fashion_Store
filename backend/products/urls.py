@@ -8,6 +8,8 @@ urlpatterns = [
     path('cart/<int:pk>/', views.delete_cart_item),
     path('orders/', views.manage_orders),
     path('orders/<int:pk>/', views.update_order_status),
+    path('payments/razorpay/create-order/', views.create_razorpay_order),
+    path('payments/razorpay/verify/', views.verify_razorpay_payment),
     path('notifications/<str:username>/', views.user_notifications),
     path('notifications/<int:pk>/detail/', views.notification_detail),
     path('register/', views.register_user),

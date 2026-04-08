@@ -47,6 +47,11 @@ const Admin = () => {
             loadProducts();
         } catch (err) {
             console.error("Error saving product", err);
+            if (err.response && err.response.data) {
+                alert("Error: " + JSON.stringify(err.response.data));
+            } else {
+                alert("An error occurred while saving the product.");
+            }
         }
     };
 

@@ -147,7 +147,7 @@ h3,
   position: relative;
   z-index: 2;
   text-align: center;
-  color: rgb(0, 0, 0);
+  color: rgb(255, 255, 255);
   max-width: 800px;
   padding: 2rem;
 }

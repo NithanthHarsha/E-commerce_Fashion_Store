@@ -6,6 +6,7 @@ import './Checkout.css';
 const Checkout = () => {
     const navigate = useNavigate();
     const [step, setStep] = useState(1);
+    const [paymentMethod, setPaymentMethod] = useState('razorpay');
     const [formData, setFormData] = useState({
         email: '',
         firstName: '',
@@ -13,10 +14,7 @@ const Checkout = () => {
         phone: '',
         address: '',
         city: '',
-        postalCode: '',
-        cardNumber: '',
-        expiry: '',
-        cvv: ''
+        postalCode: ''
     });
 
     const handleInputChange = (e) => {
@@ -40,33 +38,108 @@ const Checkout = () => {
 
     const prevStep = () => setStep(step - 1);
 
+    const loadRazorpayScript = () => {
+        return new Promise((resolve) => {
+            if (window.Razorpay) {
+                resolve(true);
+                return;
+            }
+
+            const script = document.createElement('script');
+            script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+            script.onload = () => resolve(true);
+            script.onerror = () => resolve(false);
+            document.body.appendChild(script);
+        });
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const { cardNumber, expiry, cvv } = formData;
-        if (!cardNumber || !expiry || !cvv) {
-            alert("Please fill in all payment details.");
-            return;
-        }
-
         try {
             const username = localStorage.getItem('username') || 'Guest';
-            // First fetch cart items to get total (or calculate total from cart if possible)
             const cartRes = await axios.get("http://127.0.0.1:8000/api/cart/");
             const total = cartRes.data.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            if (total <= 0) {
+                alert("Your cart is empty.");
+                return;
+            }
 
-            const orderData = {
+            const customerData = {
                 user: username,
-                ...formData,
-                total_price: total
+                email: formData.email,
+                phone: formData.phone,
+                firstName: formData.firstName,
+                lastName: formData.lastName,
+                address: formData.address,
+                city: formData.city,
+                postalCode: formData.postalCode
             };
 
-            await axios.post("http://127.0.0.1:8000/api/orders/", orderData);
-            
-            alert("Order Placed Successfully! Thank you for shopping with Fashion Store.");
-            navigate('/');
+            if (paymentMethod === 'cod') {
+                await axios.post("http://127.0.0.1:8000/api/orders/", {
+                    ...customerData,
+                    total_price: total,
+                    payment_provider: 'cod',
+                    is_paid: false
+                });
+                alert("Order placed with Cash on Delivery.");
+                navigate('/');
+                return;
+            }
+
+            const sdkLoaded = await loadRazorpayScript();
+            if (!sdkLoaded) {
+                alert("Razorpay SDK failed to load. Please check your internet and try again.");
+                return;
+            }
+
+            const receipt = `fs_${Date.now()}`;
+            const razorpayOrderResponse = await axios.post(
+                "http://127.0.0.1:8000/api/payments/razorpay/create-order/",
+                { amount: Math.round(total * 100), receipt }
+            );
+
+            const options = {
+                key: razorpayOrderResponse.data.key,
+                amount: razorpayOrderResponse.data.amount,
+                currency: razorpayOrderResponse.data.currency,
+                name: 'Fashion Store',
+                description: 'Order Payment',
+                order_id: razorpayOrderResponse.data.id,
+                prefill: {
+                    name: `${formData.firstName} ${formData.lastName}`.trim(),
+                    email: formData.email,
+                    contact: formData.phone
+                },
+                notes: {
+                    address: `${formData.address}, ${formData.city}, ${formData.postalCode}`
+                },
+                handler: async function (response) {
+                    try {
+                        await axios.post("http://127.0.0.1:8000/api/payments/razorpay/verify/", {
+                            ...response,
+                            ...customerData
+                        });
+                        alert("Payment successful and order placed!");
+                        navigate('/');
+                    } catch (verifyError) {
+                        console.error("Payment verification failed:", verifyError);
+                        alert("Payment captured but order verification failed. Please contact support.");
+                    }
+                },
+                theme: {
+                    color: '#111111'
+                }
+            };
+
+            const razorpay = new window.Razorpay(options);
+            razorpay.on('payment.failed', function () {
+                alert("Payment failed. Please try again.");
+            });
+            razorpay.open();
         } catch (err) {
-            console.error("Error placing order:", err);
-            alert("Failed to place order. Please try again.");
+            console.error("Error initializing payment:", err);
+            alert("Could not start Razorpay payment. Please try again.");
         }
     };
 
@@ -128,25 +201,37 @@ const Checkout = () => {
                     {step === 2 && (
                         <div className="checkout-step">
                             <h2>Payment Method</h2>
-                            <div className="form-row">
-                                <div className="form-group">
-                                    <label>Card Number</label>
-                                    <input type="text" name="cardNumber" placeholder="0000 0000 0000 0000" value={formData.cardNumber} onChange={handleInputChange} required />
-                                </div>
+                            <div className="payment-options">
+                                <button
+                                    type="button"
+                                    className={`payment-option ${paymentMethod === 'razorpay' ? 'active' : ''}`}
+                                    onClick={() => setPaymentMethod('razorpay')}
+                                >
+                                    Razorpay (UPI / Card / Netbanking)
+                                </button>
+                                <button
+                                    type="button"
+                                    className={`payment-option ${paymentMethod === 'cod' ? 'active' : ''}`}
+                                    onClick={() => setPaymentMethod('cod')}
+                                >
+                                    Cash on Delivery
+                                </button>
                             </div>
-                            <div className="form-row split">
-                                <div className="form-group">
-                                    <label>Expiry Date</label>
-                                    <input type="text" name="expiry" placeholder="MM/YY" value={formData.expiry} onChange={handleInputChange} required />
-                                </div>
-                                <div className="form-group">
-                                    <label>CVV</label>
-                                    <input type="text" name="cvv" placeholder="123" value={formData.cvv} onChange={handleInputChange} required />
-                                </div>
+                            <p className="payment-note">
+                                {paymentMethod === 'razorpay'
+                                    ? "You will be redirected to Razorpay's secure payment window."
+                                    : "Pay in cash when your order is delivered."}
+                            </p>
+                            <div className="form-row">
+                                <button type="button" className="btn-next razorpay-btn">
+                                    {paymentMethod === 'razorpay' ? 'Pay Securely with Razorpay' : 'Cash on Delivery Selected'}
+                                </button>
                             </div>
                             <div className="form-actions">
                                 <button type="button" className="btn-back" onClick={prevStep}>Back</button>
-                                <button type="submit" className="btn-submit">Finalize Order</button>
+                                <button type="submit" className="btn-submit">
+                                    {paymentMethod === 'razorpay' ? 'Proceed to Pay' : 'Place COD Order'}
+                                </button>
                             </div>
                         </div>
                     )}

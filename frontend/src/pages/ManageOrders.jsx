@@ -62,8 +62,8 @@ const ManageOrders = () => {
                                 <tr key={order.id}>
                                     <td>#{order.id}</td>
                                     <td>
-                                        <strong>{order.user}</strong><br/>
-                                        <small>{order.email}</small><br/>
+                                        <strong>{order.user}</strong><br />
+                                        <small>{order.email}</small><br />
                                         <small>{order.phone}</small>
                                     </td>
                                     <td>${order.total_price}</td>

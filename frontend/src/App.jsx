@@ -76,6 +76,9 @@ function App() {
   };
 
   const toggleNotifications = () => {
+    if (user) {
+      fetchNotifications(user);
+    }
     if (!showNotifications) {
       markAllAsRead();
     }

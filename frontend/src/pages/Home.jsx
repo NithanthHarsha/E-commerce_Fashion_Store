@@ -53,7 +53,11 @@ const Home = () => {
             navigate('/cart');
         } catch (err) {
             console.error("Error adding to cart:", err);
-            alert("Could not add to cart. Is the backend running?");
+            if (err.response && err.response.data) {
+                alert("Error: " + JSON.stringify(err.response.data));
+            } else {
+                alert("Could not add to cart. Is the backend running?");
+            }
         }
     };
 
