@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { fetchProducts } from '../api';
+import API, { fetchProducts, getMediaUrl } from '../api';
 
 const Home = () => {
     const [products, setProducts] = useState([]);
@@ -49,7 +48,7 @@ const Home = () => {
         };
 
         try {
-            await axios.post("http://127.0.0.1:8000/api/cart/", data);
+            await API.post("cart/", data);
             navigate('/cart');
         } catch (err) {
             console.error("Error adding to cart:", err);
@@ -106,7 +105,7 @@ const Home = () => {
                             <div key={product.id} className="product-card">
                                 <div className="product-image-wrapper">
                                     <img 
-                                        src={product.image.startsWith('http') ? product.image : `http://127.0.0.1:8000${product.image}`} 
+                                        src={getMediaUrl(product.image)}
                                         alt={product.name} 
                                     />
                                     <button

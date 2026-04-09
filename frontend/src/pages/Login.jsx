@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import API from '../api';
 import './Login.css';
 
 const Login = ({ onLogin }) => {
@@ -19,7 +19,7 @@ const Login = ({ onLogin }) => {
         e.preventDefault();
         setError('');
         try {
-            const response = await axios.post("http://127.0.0.1:8000/api/login/", {
+            const response = await API.post("login/", {
                 username: formData.username,
                 password: formData.password
             });

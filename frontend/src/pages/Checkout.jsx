@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import API from '../api';
 import './Checkout.css';
 
 const Checkout = () => {
@@ -57,7 +57,7 @@ const Checkout = () => {
         e.preventDefault();
         try {
             const username = localStorage.getItem('username') || 'Guest';
-            const cartRes = await axios.get("http://127.0.0.1:8000/api/cart/");
+            const cartRes = await API.get("cart/");
             const total = cartRes.data.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             if (total <= 0) {
                 alert("Your cart is empty.");
@@ -76,7 +76,7 @@ const Checkout = () => {
             };
 
             if (paymentMethod === 'cod') {
-                await axios.post("http://127.0.0.1:8000/api/orders/", {
+                await API.post("orders/", {
                     ...customerData,
                     total_price: total,
                     payment_provider: 'cod',
@@ -94,8 +94,8 @@ const Checkout = () => {
             }
 
             const receipt = `fs_${Date.now()}`;
-            const razorpayOrderResponse = await axios.post(
-                "http://127.0.0.1:8000/api/payments/razorpay/create-order/",
+            const razorpayOrderResponse = await API.post(
+                "payments/razorpay/create-order/",
                 { amount: Math.round(total * 100), receipt }
             );
 
@@ -116,7 +116,7 @@ const Checkout = () => {
                 },
                 handler: async function (response) {
                     try {
-                        await axios.post("http://127.0.0.1:8000/api/payments/razorpay/verify/", {
+                        await API.post("payments/razorpay/verify/", {
                             ...response,
                             ...customerData
                         });

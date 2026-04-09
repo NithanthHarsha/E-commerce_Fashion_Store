@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import API, { getMediaUrl } from '../api';
 import './Cart.css';
 
 
@@ -16,7 +16,7 @@ const Cart = () => {
 
     const fetchCart = async () => {
         try {
-            const response = await axios.get("http://127.0.0.1:8000/api/cart/");
+            const response = await API.get("cart/");
             setCartItems(response.data);
             setLoading(false);
         } catch (err) {
@@ -29,7 +29,7 @@ const Cart = () => {
         const newQty = currentQty + delta;
         
         try {
-            await axios.patch(`http://127.0.0.1:8000/api/cart/${id}/`, {
+            await API.patch(`cart/${id}/`, {
                 quantity: newQty
             });
             fetchCart(); 
@@ -40,7 +40,7 @@ const Cart = () => {
 
     const removeItem = async (id) => {
         try {
-            await axios.delete(`http://127.0.0.1:8000/api/cart/${id}/`);
+            await API.delete(`cart/${id}/`);
             fetchCart();
         } catch (err) {
             console.error("Error removing item:", err);
@@ -69,7 +69,7 @@ const Cart = () => {
                                     <div className="item-main">
                                         <div className="item-image">
                                             <img 
-                                                src={item.image.startsWith('http') ? item.image : `http://127.0.0.1:8000${item.image}`} 
+                                                src={getMediaUrl(item.image)}
                                                 alt={item.product_name} 
                                             />
                                         </div>

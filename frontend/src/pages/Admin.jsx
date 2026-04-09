@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchProducts, createProduct, updateProduct, deleteProduct } from '../api';
+import { fetchProducts, createProduct, updateProduct, deleteProduct, getMediaUrl } from '../api';
 import './Admin.css';
 
 
@@ -157,7 +157,7 @@ const Admin = () => {
                                 <tr key={product.id}>
                                     <td>
                                         <img 
-                                            src={product.image.startsWith('http') ? product.image : `http://127.0.0.1:8000${product.image}`} 
+                                            src={getMediaUrl(product.image)}
                                             alt={product.name} 
                                             className="admin-thumb" 
                                         />

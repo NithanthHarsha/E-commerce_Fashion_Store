@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import API from '../api';
 import './Admin.css';
 
 const ManageOrders = () => {
@@ -12,7 +12,7 @@ const ManageOrders = () => {
 
     const loadOrders = async () => {
         try {
-            const response = await axios.get("http://127.0.0.1:8000/api/orders/");
+            const response = await API.get("orders/");
             setOrders(response.data);
             setLoading(false);
         } catch (err) {
@@ -23,7 +23,7 @@ const ManageOrders = () => {
 
     const updateStatus = async (orderId, newStatus) => {
         try {
-            await axios.patch(`http://127.0.0.1:8000/api/orders/${orderId}/`, {
+            await API.patch(`orders/${orderId}/`, {
                 status: newStatus
             });
             loadOrders();

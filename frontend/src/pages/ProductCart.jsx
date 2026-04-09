@@ -1,4 +1,4 @@
-import axios from "axios";
+import API from "../api";
 
 function ProductCard({ product }) {
 
@@ -10,8 +10,8 @@ function ProductCard({ product }) {
       quantity: 1
     };
 
-    await axios.post(
-      "http://127.0.0.1:8000/api/cart/add/",
+    await API.post(
+      "cart/add/",
       data
     );
 

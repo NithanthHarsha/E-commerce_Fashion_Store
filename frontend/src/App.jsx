@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import axios from 'axios';
+import API from './api';
 import Home from './pages/Home';
 import Admin from './pages/Admin';
 import ManageOrders from './pages/ManageOrders';
@@ -28,7 +28,7 @@ function App() {
 
   const fetchNotifications = async (username) => {
     try {
-      const res = await axios.get(`http://127.0.0.1:8000/api/notifications/${username}/`);
+      const res = await API.get(`notifications/${username}/`);
       setNotifications(res.data);
     } catch (err) {
       console.error("Error fetching notifications", err);
@@ -56,8 +56,8 @@ function App() {
     if (unreadNotifications.length === 0) return;
 
     try {
-      await Promise.all(unreadNotifications.map(n => 
-        axios.patch(`http://127.0.0.1:8000/api/notifications/${n.id}/detail/`, { is_read: true })
+      await Promise.all(unreadNotifications.map(n =>
+        API.patch(`notifications/${n.id}/detail/`, { is_read: true })
       ));
       // Update local state
       setNotifications(notifications.map(n => ({ ...n, is_read: true })));
@@ -68,7 +68,7 @@ function App() {
 
   const deleteNotification = async (id) => {
     try {
-      await axios.delete(`http://127.0.0.1:8000/api/notifications/${id}/detail/`);
+      await API.delete(`notifications/${id}/detail/`);
       setNotifications(notifications.filter(n => n.id !== id));
     } catch (err) {
       console.error("Error deleting notification", err);
