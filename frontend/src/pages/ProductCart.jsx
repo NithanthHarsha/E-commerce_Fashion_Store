@@ -11,7 +11,7 @@ function ProductCard({ product }) {
     };
 
     await API.post(
-      "cart/add/",
+      "cart/",
       data
     );
 
