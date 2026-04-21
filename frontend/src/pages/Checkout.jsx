@@ -137,6 +137,28 @@ const Checkout = () => {
                         toast.error("Payment captured but order verification failed. Please contact support.");
                     }
                 },
+                config: {
+                    display: {
+                        blocks: {
+                            card: {
+                                name: 'Pay via Card',
+                                instruments: [
+                                    { method: 'card' }
+                                ]
+                            },
+                            other: {
+                                name: 'Other Payment Modes',
+                                instruments: [
+                                    { method: 'upi' },
+                                    { method: 'netbanking' },
+                                    { method: 'wallet' }
+                                ]
+                            }
+                        },
+                        sequence: ['block.card', 'block.other'],
+                        preferences: { show_default_blocks: false }
+                    }
+                },
                 theme: {
                     color: '#111111'
                 }
