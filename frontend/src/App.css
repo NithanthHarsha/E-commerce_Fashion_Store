@@ -607,4 +607,14 @@ h3,
     font-size: 0.75rem !important;
     padding: 12px 16px !important;
   }
+
+  .notif-dropdown {
+    position: fixed;
+    top: 130px;
+    left: 5%;
+    right: 5%;
+    width: 90%;
+    margin: 0 auto;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  }
 }
