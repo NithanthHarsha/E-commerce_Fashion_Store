@@ -141,13 +141,21 @@ const Checkout = () => {
                     display: {
                         blocks: {
                             card: {
-                                name: 'Pay via Card (Test Mode)',
+                                name: 'Pay via Card',
                                 instruments: [
                                     { method: 'card' }
                                 ]
+                            },
+                            other: {
+                                name: 'Other Payment Modes',
+                                instruments: [
+                                    { method: 'upi' },
+                                    { method: 'netbanking' },
+                                    { method: 'wallet' }
+                                ]
                             }
                         },
-                        sequence: ['block.card'],
+                        sequence: ['block.card', 'block.other'],
                         preferences: { show_default_blocks: false }
                     }
                 },
