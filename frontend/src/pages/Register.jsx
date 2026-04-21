@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API from '../api';
+import toast from 'react-hot-toast';
 import './Register.css';
 
 const Register = () => {
@@ -35,7 +36,7 @@ const Register = () => {
                 confirm_password: formData.confirmPassword
             });
             
-            alert(response.data.message);
+            toast.success(response.data.message || "Registration successful!");
             navigate('/login');
         } catch (err) {
             setError(err.response?.data?.error || "Registration failed. Please try again.");

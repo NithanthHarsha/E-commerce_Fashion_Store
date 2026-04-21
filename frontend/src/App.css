@@ -584,3 +584,24 @@ h3,
     font-size: 1.5rem;
   }
 }
+
+/* Professional Toast Notifications */
+.professional-toast {
+  background-color: var(--primary) !important;
+  color: var(--bg) !important;
+  font-family: 'Outfit', sans-serif !important;
+  border-radius: 4px !important;
+  letter-spacing: 0.05em;
+  font-size: 0.85rem !important;
+  padding: 16px 24px !important;
+  text-transform: uppercase;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  max-width: 90vw !important; /* Mobile responsive */
+}
+
+@media (max-width: 600px) {
+  .professional-toast {
+    font-size: 0.75rem !important;
+    padding: 12px 16px !important;
+  }
+}

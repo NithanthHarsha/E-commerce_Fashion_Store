@@ -1,4 +1,5 @@
 import API from "../api";
+import toast from "react-hot-toast";
 
 function ProductCard({ product }) {
 
@@ -15,7 +16,7 @@ function ProductCard({ product }) {
       data
     );
 
-    alert("Product added to cart");
+    toast.success("Product added to cart");
   };
 
   return (

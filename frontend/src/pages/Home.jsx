@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API, { fetchProducts, getMediaUrl } from '../api';
+import toast from 'react-hot-toast';
 
 const Home = () => {
     const [products, setProducts] = useState([]);
@@ -49,13 +50,17 @@ const Home = () => {
 
         try {
             await API.post("cart/", data);
+            toast.success(`${product.name} added to cart!`);
             navigate('/cart');
         } catch (err) {
             console.error("Error adding to cart:", err);
-            if (err.response && err.response.data) {
-                alert("Error: " + JSON.stringify(err.response.data));
+            if (err.response?.status === 401 || err.response?.status === 403) {
+                toast.error("Please login to add items to cart.");
+                navigate('/login');
+            } else if (err.response && err.response.data) {
+                toast.error(err.response.data.error || "Failed to add to cart");
             } else {
-                alert("Could not add to cart. Is the backend running?");
+                toast.error("Network error. Is the server running?");
             }
         }
     };

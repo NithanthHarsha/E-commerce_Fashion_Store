@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API from '../api';
+import toast from 'react-hot-toast';
 import './Checkout.css';
 
 const Checkout = () => {
@@ -24,7 +25,7 @@ const Checkout = () => {
     const validateShipping = () => {
         const { email, firstName, lastName, phone, address, city, postalCode } = formData;
         if (!email || !firstName || !lastName || !phone || !address || !city || !postalCode) {
-            alert("Please fill in all shipping details before continuing.");
+            toast.error("Please fill in all shipping details before continuing.");
             return false;
         }
         return true;
@@ -60,7 +61,7 @@ const Checkout = () => {
             const cartRes = await API.get("cart/");
             const total = cartRes.data.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             if (total <= 0) {
-                alert("Your cart is empty.");
+                toast.error("Your cart is empty.");
                 return;
             }
 
@@ -82,14 +83,14 @@ const Checkout = () => {
                     payment_provider: 'cod',
                     is_paid: false
                 });
-                alert("Order placed with Cash on Delivery.");
+                toast.success("Order placed with Cash on Delivery.");
                 navigate('/');
                 return;
             }
 
             const sdkLoaded = await loadRazorpayScript();
             if (!sdkLoaded) {
-                alert("Razorpay SDK failed to load. Please check your internet and try again.");
+                toast.error("Razorpay SDK failed to load. Please check your internet and try again.");
                 return;
             }
 
@@ -118,13 +119,13 @@ const Checkout = () => {
                     try {
                         await API.post("payments/razorpay/verify/", {
                             ...response,
-                            ...customerData
+                        ...customerData
                         });
-                        alert("Payment successful and order placed!");
+                        toast.success("Payment successful and order placed!");
                         navigate('/');
                     } catch (verifyError) {
                         console.error("Payment verification failed:", verifyError);
-                        alert("Payment captured but order verification failed. Please contact support.");
+                        toast.error("Payment captured but order verification failed. Please contact support.");
                     }
                 },
                 theme: {
@@ -134,12 +135,12 @@ const Checkout = () => {
 
             const razorpay = new window.Razorpay(options);
             razorpay.on('payment.failed', function () {
-                alert("Payment failed. Please try again.");
+                toast.error("Payment failed. Please try again.");
             });
             razorpay.open();
         } catch (err) {
             console.error("Error initializing payment:", err);
-            alert("Could not start Razorpay payment. Please try again.");
+            toast.error("Could not start Razorpay payment. Please try again.");
         }
     };
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { fetchProducts, createProduct, updateProduct, deleteProduct, getMediaUrl } from '../api';
+import toast from 'react-hot-toast';
 import './Admin.css';
 
 
@@ -42,15 +43,16 @@ const Admin = () => {
             } else {
                 await createProduct(data);
             }
+            toast.success(editingId ? "Product updated successfully" : "Product added successfully");
             setFormData({ name: '', price: '', description: '', image: '' });
             setEditingId(null);
             loadProducts();
         } catch (err) {
             console.error("Error saving product", err);
             if (err.response && err.response.data) {
-                alert("Error: " + JSON.stringify(err.response.data));
+                toast.error("Error: " + JSON.stringify(err.response.data));
             } else {
-                alert("An error occurred while saving the product.");
+                toast.error("An error occurred while saving the product.");
             }
         }
     };

@@ -9,6 +9,7 @@ import Login from './pages/Login';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import './App.css';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -87,6 +88,7 @@ function App() {
 
   return (
     <Router>
+      <Toaster position="bottom-right" toastOptions={{ className: 'professional-toast' }} />
       <div className="App">
         <nav className="navbar">
           <Link to="/" className="logo">FASHION STORE</Link>

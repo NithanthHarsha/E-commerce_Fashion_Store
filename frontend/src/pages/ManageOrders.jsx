@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import API from '../api';
+import toast from 'react-hot-toast';
 import './Admin.css';
 
 const ManageOrders = () => {
@@ -28,7 +29,7 @@ const ManageOrders = () => {
             });
             loadOrders();
             if (newStatus === 'Packed') {
-                alert(`Order #${orderId} has been marked as Packed. The user will be notified.`);
+                toast.success(`Order #${orderId} marked as Packed. The user will be notified.`);
             }
         } catch (err) {
             console.error("Error updating order status", err);
