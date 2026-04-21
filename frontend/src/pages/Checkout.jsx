@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API from '../api';
 import toast from 'react-hot-toast';
@@ -6,6 +6,15 @@ import './Checkout.css';
 
 const Checkout = () => {
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const username = localStorage.getItem('username');
+        if (!username) {
+            toast.error("Please login to proceed to checkout.");
+            navigate('/login');
+        }
+    }, [navigate]);
+
     const [step, setStep] = useState(1);
     const [paymentMethod, setPaymentMethod] = useState('razorpay');
     const [formData, setFormData] = useState({

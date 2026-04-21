@@ -1,9 +1,17 @@
 import API from "../api";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 function ProductCard({ product }) {
+  const navigate = useNavigate();
 
   const addToCart = async () => {
+    const username = localStorage.getItem('username');
+    if (!username) {
+        toast.error("Please login to add items to the cart.");
+        navigate('/login');
+        return;
+    }
 
     const data = {
       product_name: product.name,

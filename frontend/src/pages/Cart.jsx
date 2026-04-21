@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API, { getMediaUrl } from '../api';
+import toast from 'react-hot-toast';
 import './Cart.css';
 
 
@@ -11,8 +12,14 @@ const Cart = () => {
 
 
     useEffect(() => {
+        const username = localStorage.getItem('username');
+        if (!username) {
+            toast.error("Please login to view your cart.");
+            navigate('/login');
+            return;
+        }
         fetchCart();
-    }, []);
+    }, [navigate]);
 
     const fetchCart = async () => {
         try {

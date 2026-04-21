@@ -40,6 +40,13 @@ const Home = () => {
     };
 
     const handleQuickAdd = async (product) => {
+        const username = localStorage.getItem('username');
+        if (!username) {
+            toast.error("Please login to add items to the cart.");
+            navigate('/login');
+            return;
+        }
+
         const data = {
             product_name: product.name,
             price: product.price,
